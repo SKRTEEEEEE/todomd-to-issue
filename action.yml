@@ -7,7 +7,7 @@ branding:
 
 inputs:
   github-token:
-    description: "GitHub token for creating issues. Use ${{ secrets.GITHUB_TOKEN }}"
+    description: "GitHub token for creating issues"
     required: true
   todo-file-path:
     description: "Path to the todo.md file"
