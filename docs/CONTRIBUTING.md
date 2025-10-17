@@ -77,14 +77,28 @@ brew install act
 Now, you can run the action with act executing:
 
 ```shell
-act -W '.github/workflows/github-action-template.yml' --container-architecture linux/amd64
+act -W '.github/workflows/node.yml' --container-architecture linux/amd64
 ```
 
-### 🐣 Release candidate
+### 🐣 Testing the action
 
-Once we push our code, we will see it will be executed the action we are developing, in this way we can test that everything is working fine, this workflow is located under `.github/workflows/github-action-template.yml`. You don't need to change this file, it will run automatically with the changes you are doing.
+To test the action locally, you can use [act](https://github.com/nektos/act) to run workflows locally:
 
-In case you want to test this action in a separated repository, you can use the branch name as tag, so you will be able to point to: `AlbertHernandez/github-action-nodejs-template@<branch-name>`.
+```shell
+act -W '.github/workflows/node.yml' --container-architecture linux/amd64
+```
+
+For testing the action in a real repository, create a test repository with:
+
+1. A `todo.md` file following the format
+2. A workflow that uses this action
+3. Push changes to trigger the workflow
+
+You can also test unreleased changes by pointing to your branch:
+
+```yaml
+uses: yourusername/todomd-to-issue@your-branch-name
+```
 
 ### 🚀 Final version
 

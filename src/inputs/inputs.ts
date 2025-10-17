@@ -1,3 +1,6 @@
 export interface Inputs {
-  readonly name?: string;
+  readonly githubToken: string;
+  readonly todoFilePath: string;
+  readonly labels: string;
+  readonly deleteTodoAfter: boolean;
 }

@@ -6,7 +6,8 @@ import { Inputs } from "@/src/inputs/inputs";
 import { LoggerMock } from "./logger/logger-mock";
 import { OutputsMock } from "./outputs/outputs-mock";
 
-vi.mock("../../../src/utils/sleep");
+vi.mock("fs");
+vi.mock("@actions/github");
 
 describe("Action", () => {
   let logger: LoggerMock;
@@ -22,30 +23,24 @@ describe("Action", () => {
     });
   });
 
-  describe("When the name input is provided", () => {
-    it("should use that input to say hello", async () => {
-      const name = "name";
+  describe("When todo.md file does not exist", () => {
+    it("should log that file was not found and set outputs to 0", async () => {
       const inputs: Inputs = {
-        name,
+        githubToken: "test-token",
+        todoFilePath: "todo.md",
+        labels: "automated,agente666",
+        deleteTodoAfter: false,
       };
 
-      await action.run(inputs);
-
-      const expectedMessage = `Hello ${name}`;
-      logger.assertInfoToHaveBeenCalledWith(expectedMessage);
-      outputs.assertSaveToHaveBeenCalledWith("message", expectedMessage);
-    });
-  });
-
-  describe("When the name input is not provided", () => {
-    it("should use world as default value", async () => {
-      const inputs: Inputs = {};
+      // Mock fs.existsSync to return false
+      // eslint-disable-next-line unicorn/prefer-module, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+      const fs = require("node:fs");
+      vi.spyOn(fs, "existsSync").mockReturnValue(false);
 
       await action.run(inputs);
 
-      const expectedMessage = "Hello World";
-      logger.assertInfoToHaveBeenCalledWith(expectedMessage);
-      outputs.assertSaveToHaveBeenCalledWith("message", expectedMessage);
+      outputs.assertSaveToHaveBeenCalledWith("issues-created", 0);
+      outputs.assertSaveToHaveBeenCalledWith("issue-urls", JSON.stringify([]));
     });
   });
 });

@@ -1,14 +1,14 @@
-name: '👮 Check dist'
+name: "👮 Check dist"
 
 on:
   push:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
   pull_request:
     paths-ignore:
-      - '**.md'
+      - "**.md"
   workflow_dispatch:
 
 jobs:
@@ -30,8 +30,8 @@ jobs:
         id: find-comment
         with:
           issue-number: ${{ github.event.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: '## 👮🏻 Detected mismatch in the `dist` directory'
+          comment-author: "github-actions[bot]"
+          body-includes: "## 👮🏻 Detected mismatch in the `dist` directory"
       - name: Delete previous comment 🗑️
         uses: actions/github-script@v7
         if: ${{ github.event_name == 'pull_request' && steps.find-comment.outputs.comment-id != '' }}
