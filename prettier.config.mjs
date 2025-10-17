@@ -7,7 +7,7 @@ const config = {
   trailingComma: "all",
   bracketSpacing: true,
   arrowParens: "avoid",
-  endOfLine: "auto", // Allow any line endings (Windows/Unix compatible)
+  endOfLine: "lf", // Use LF for consistency across all platforms (Git handles conversion on Windows)
 };
 
 export default config;

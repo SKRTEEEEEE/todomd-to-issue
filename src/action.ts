@@ -8,6 +8,7 @@ import { Logger } from "./logger/logger";
 import { Outputs } from "./outputs/outputs";
 import { CreatedIssue } from "./types/todo-issue";
 import { formatBody, formatTitle } from "./utils/issue-formatter";
+import { LabelLoader } from "./utils/label-loader";
 import { TodoParser } from "./utils/todo-parser";
 
 export class Action {
@@ -53,11 +54,20 @@ export class Action {
       const octokit = getOctokit(inputs.githubToken);
       const createdIssues: CreatedIssue[] = [];
 
+      this.logger.info("Resolving labels...");
+
       // Parse labels
-      const labels = inputs.labels
+      const requestedLabels = inputs.labels
         .split(",")
         .map(label => label.trim())
         .filter(label => label.length > 0);
+
+      const resolvedLabels = await LabelLoader.resolveLabels(
+        inputs.githubToken,
+        requestedLabels,
+      );
+
+      this.logger.info(`Resolved labels: ${resolvedLabels.join(", ")}`);
 
       // Create issues
       for (const issue of issues) {
@@ -72,7 +82,7 @@ export class Action {
             repo: context.repo.repo,
             title: title,
             body: body,
-            labels: labels,
+            labels: resolvedLabels,
           });
 
           createdIssues.push({

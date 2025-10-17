@@ -49,6 +49,7 @@
     "@swc/cli": "^0.7.8",
     "@swc/core": "^1.13.19",
     "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vercel/ncc": "^0.38.3",
@@ -77,6 +78,7 @@
   ],
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0"
+    "@actions/github": "^6.0.0",
+    "js-yaml": "^4.1.0"
   }
 }

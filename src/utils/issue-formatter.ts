@@ -10,7 +10,7 @@ import { TodoIssue } from "../types/todo-issue";
  *
  * ## 🔑 Key Points
  *
- * ### 🖲️/💻/⛓️ <Section Name>
+ * ### <Section Name>
  * - [ ] <Task of the issue>
  *   <Information of the task>
  *   - <List element inside the task>
@@ -67,7 +67,7 @@ export function formatBody(issue: TodoIssue): string {
   if (otherSections.length > 0) {
     for (const [sectionName, sectionContent] of otherSections) {
       // If no sections or only basic content, use default section name
-      body += `### 🖲️/💻/⛓️ ${sectionName}\n\n`;
+      body += `### ${sectionName}\n\n`;
       body +=
         "<!-- Key point what needs to be accomplished, representing the idea of this Task -->\n\n";
 
