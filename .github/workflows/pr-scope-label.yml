@@ -1,4 +1,4 @@
-name: '🏷️ PR Scope label'
+name: "🏷️ PR Scope label"
 
 on:
   pull_request_target:
@@ -11,7 +11,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: 'Add labels to PR 🧧'
+      - name: "Add labels to PR 🧧"
         uses: actions/labeler@v5
         with:
           configuration-path: .github/pr-scope-labeler.yml

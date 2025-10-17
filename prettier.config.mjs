@@ -7,6 +7,7 @@ const config = {
   trailingComma: "all",
   bracketSpacing: true,
   arrowParens: "avoid",
+  endOfLine: "auto", // Allow any line endings (Windows/Unix compatible)
 };
 
 export default config;
