@@ -65,6 +65,7 @@ export class Action {
       const resolvedLabels = await LabelLoader.resolveLabels(
         inputs.githubToken,
         requestedLabels,
+        this.logger,
       );
 
       this.logger.info(`Resolved labels: ${resolvedLabels.join(", ")}`);

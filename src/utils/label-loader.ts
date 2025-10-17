@@ -4,6 +4,8 @@ import path from "node:path";
 import { context, getOctokit } from "@actions/github";
 import yaml from "js-yaml";
 
+import { Logger } from "../logger/logger";
+
 export interface LabelDefinition {
   name: string;
   description?: string;
@@ -22,7 +24,6 @@ export const LabelLoader = {
     if (!fs.existsSync(filePath)) return undefined;
 
     const raw = fs.readFileSync(filePath, "utf8");
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const parsed: unknown = yaml.load(raw);
 
     if (!Array.isArray(parsed)) {
@@ -53,12 +54,12 @@ export const LabelLoader = {
   async resolveLabels(
     token: string,
     requestedLabels: string[],
+    logger: Logger,
   ): Promise<string[]> {
     const config = this.loadLocalConfig();
 
     if (!config) {
-      // eslint-disable-next-line no-console
-      console.log(
+      logger.info(
         "⚠️ No .github/labels.yml found — using provided labels directly",
       );
       return requestedLabels;
@@ -76,8 +77,7 @@ export const LabelLoader = {
       if (found) {
         resolvedLabels.push(found.name);
       } else {
-        // eslint-disable-next-line no-console
-        console.log(`⚠️ Label '${label}' not found in labels.yml`);
+        logger.info(`⚠️ Label '${label}' not found in labels.yml`);
       }
     }
 
@@ -113,11 +113,9 @@ export const LabelLoader = {
           description: label.description,
           color: label.color, // sin "#"
         });
-        // eslint-disable-next-line no-console
-        console.log(`🆕 Created missing label: ${label.name}`);
+        logger.info(`🆕 Created missing label: ${label.name}`);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(
+        logger.error(
           `❌ Failed to create label '${label.name}': ${(error as Error).message}`,
         );
       }

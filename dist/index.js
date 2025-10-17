@@ -35713,7 +35713,6 @@ const LabelLoader = {
         if (!external_node_fs_default().existsSync(filePath))
             return undefined;
         const raw = external_node_fs_default().readFileSync(filePath, "utf8");
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         const parsed = js_yaml.load(raw);
         if (!Array.isArray(parsed)) {
             return undefined;
@@ -35734,11 +35733,10 @@ const LabelLoader = {
         }
         return map;
     },
-    async resolveLabels(token, requestedLabels) {
+    async resolveLabels(token, requestedLabels, logger) {
         const config = this.loadLocalConfig();
         if (!config) {
-            // eslint-disable-next-line no-console
-            console.log("⚠️ No .github/labels.yml found — using provided labels directly");
+            logger.info("⚠️ No .github/labels.yml found — using provided labels directly");
             return requestedLabels;
         }
         const resolvedLabels = [];
@@ -35752,8 +35750,7 @@ const LabelLoader = {
                 resolvedLabels.push(found.name);
             }
             else {
-                // eslint-disable-next-line no-console
-                console.log(`⚠️ Label '${label}' not found in labels.yml`);
+                logger.info(`⚠️ Label '${label}' not found in labels.yml`);
             }
         }
         // obtiene los labels ya existentes del repo
@@ -35778,12 +35775,10 @@ const LabelLoader = {
                     description: label.description,
                     color: label.color, // sin "#"
                 });
-                // eslint-disable-next-line no-console
-                console.log(`🆕 Created missing label: ${label.name}`);
+                logger.info(`🆕 Created missing label: ${label.name}`);
             }
             catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(`❌ Failed to create label '${label.name}': ${error.message}`);
+                logger.error(`❌ Failed to create label '${label.name}': ${error.message}`);
             }
         }
         return resolvedLabels.length > 0 ? resolvedLabels : requestedLabels;
@@ -35926,7 +35921,7 @@ class Action {
                 .split(",")
                 .map(label => label.trim())
                 .filter(label => label.length > 0);
-            const resolvedLabels = await LabelLoader.resolveLabels(inputs.githubToken, requestedLabels);
+            const resolvedLabels = await LabelLoader.resolveLabels(inputs.githubToken, requestedLabels, this.logger);
             this.logger.info(`Resolved labels: ${resolvedLabels.join(", ")}`);
             // Create issues
             for (const issue of issues) {
